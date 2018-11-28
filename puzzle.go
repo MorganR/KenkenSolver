@@ -61,6 +61,15 @@ func RequestPuzzle(size uint8) *Puzzle {
 			pzl.confirmRegion(region)
 			numUnset -= uint8(len(region))
 			region = *NewIndexSet()
+		case 'u':
+			for ; Char(input) != Enter; fmt.Scanf("%c", &input) {
+				// Clear the enter char
+			}
+			if region.Len() > 1 {
+				selected[cursor.Y][cursor.X] = false
+				region.Drop(cursor)
+				cursor = region.Slice()[0]
+			}
 		default:
 			// Do nothing
 		}
@@ -72,7 +81,7 @@ func RequestPuzzle(size uint8) *Puzzle {
 		tm.MoveCursor(1, 1)
 		tm.Printf("Input the formula regions in the puzzle. Start by selecting a region, then enter the result and necessary operation.\n\n")
 		tm.Println("Use the arrow keys to move the 'X' and select a region in the grid.")
-		tm.Println("Press 'c' when complete, or press 'u' to undo a move.")
+		tm.Println("Press 'c' when complete, or press 'u' to remove the current square from the selection.")
 		tm.Println("All inputs must be followed by enter.")
 		pzl.printWithCursor(cursor, selected, region)
 		tm.Flush()

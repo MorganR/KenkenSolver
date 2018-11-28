@@ -47,3 +47,53 @@ func TestIndexSetContains(t *testing.T) {
 		t.Errorf("IndexSet contained unexpected contents: %v", Index{1, 1})
 	}
 }
+
+func TestIndexSetDrop(t *testing.T) {
+	is := NewIndexSet()
+	i := Index{0, 1}
+	is.Add(i)
+	is.Add(Index{0, 2})
+	is.Drop(i)
+	if is.Contains(i) || is.Len() != 1 {
+		t.Errorf("Did not properly drop index %v from set %v", i, is)
+	}
+}
+
+func TestIndexSetSlice(t *testing.T) {
+	is := NewIndexSet()
+	i1, i2 := Index{0,1}, Index{0,2}
+	is.Add(i1)
+	is.Add(i1)
+	is.Add(i2)
+	s := is.Slice()
+	if len(s) != 2 {
+		t.Errorf("Slice had wrong length %v, expected %v", len(s), 2)
+	}
+	isSliceCorrect := false
+	if s[0] == i1 {
+		if s[1] == i2 {
+			isSliceCorrect = true
+		}
+	} else if s[0] == i2 {
+		if s[1] == i1 {
+			isSliceCorrect = true
+		}
+	}
+	if !isSliceCorrect {
+		t.Errorf("Slice contained wrong indices: %v, expected %v and %v", s, i1, i2)
+	}
+}
+
+func ExampleIndexSetDropMissingIndex() {
+	is := NewIndexSet()
+	is.Drop(Index{0, 1})
+	fmt.Println(is)
+	// Output: []
+}
+
+func ExampleIndexSetString() {
+	is := NewIndexSet()
+	is.Add(Index{0, 1})
+	fmt.Println(is)
+	// Output: [(0,1)]
+}

@@ -30,6 +30,10 @@ func (is *IndexSet) Add(i Index) {
 	(*is)[i] = empty
 }
 
+func (is *IndexSet) Drop(i Index) {
+	delete(*is, i)
+}
+
 func (is IndexSet) Contains(i Index) bool {
 	_, present := is[i]
 	return present
@@ -37,6 +41,16 @@ func (is IndexSet) Contains(i Index) bool {
 
 func (is IndexSet) Len() int {
 	return len(is)
+}
+
+func (is IndexSet) Slice() []Index {
+	s := make([]Index, is.Len())
+	i := 0
+	for idx := range is {
+		s[i] = idx
+		i++
+	}
+	return s
 }
 
 func (is IndexSet) String() string {
@@ -48,8 +62,9 @@ func (is IndexSet) String() string {
 		if counter < len(is) {
 			sb.WriteString(fmt.Sprintf("%v,", i))
 		} else {
-			sb.WriteString(fmt.Sprintf("%v]", i))
+			sb.WriteString(fmt.Sprintf("%v", i))
 		}
 	}
+	sb.WriteString("]")
 	return sb.String()
 }
