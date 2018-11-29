@@ -11,6 +11,22 @@ func TestUnsolveablePuzzle(t *testing.T) {
 	idxs := NewIndexSet()
 	idxs.Add(Index{0, 0})
 	p.regions = append(p.regions, Region{1, Nothing, *idxs})
+	idxs = NewIndexSet()
+	idxs.Add(Index{0, 1})
+	p.regions = append(p.regions, Region{1, Nothing, *idxs})
+	idxs = NewIndexSet()
+	idxs.Add(Index{1, 0})
+	idxs.Add(Index{1, 1})
+	p.regions = append(p.regions, Region{2, Mul, *idxs})
+
+	p.prepareRegionsByIndex()
+	p.prepareBoxesFromRegions()
+	p.buildHeap()
+
+	err := p.Solve()
+	if err == nil {
+		t.Fatalf("Puzzle returned success for unsolveable puzzle")
+	}
 }
 
 func TestPuzzleSolve(t *testing.T) {
